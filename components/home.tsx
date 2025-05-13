@@ -1,7 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-
 import { Suspense, useEffect } from "react";
 import localFont from "next/font/local";
 
@@ -23,8 +21,8 @@ export const acma = localFont({
   variable: "--font-acma",
 });
 
-function SearchParamsContent() {
-  const searchParams = useSearchParams();
+// Create a separate component for the parts that need useSearchParams
+function LoaderWrapper({ searchParams }: { searchParams: URLSearchParams }) {
   const showLoader = searchParams.get("loader");
 
   useEffect(() => {
@@ -37,19 +35,24 @@ function SearchParamsContent() {
     };
   }, [showLoader]);
 
-  return showLoader || "";
+  return (
+    <>
+      <Loader acmaFont={acma.className} loader={showLoader || ""} />
+    </>
+  );
 }
+
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
   const { manageMouseMove } = useMouseParallax();
-  const params = SearchParamsContent();
+  const searchParams = useSearchParams();
 
   return (
     <main onMouseMove={manageMouseMove}>
       <Navigation delay={1} />
       <Suspense fallback={<div>Loading...</div>}>
-        {/* This component will handle the useSearchParams logic */}
-        <Loader acmaFont={acma.className} loader={params} />
+        <LoaderWrapper searchParams={searchParams} />
       </Suspense>
       <HeroSection />
       <ProjectsSection acmaFont={acma.className} />
