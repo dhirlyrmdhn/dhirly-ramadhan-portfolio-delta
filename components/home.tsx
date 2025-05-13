@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
+
+import { Suspense, useEffect } from "react";
 import localFont from "next/font/local";
-import { useScroll } from "framer-motion";
 
 // Components
 import Loader from "@/components/sections/loader";
@@ -16,15 +17,13 @@ import Navigation from "@/components/ui/navigation";
 // Hooks
 import { useMouseParallax } from "@/hooks/use-mouse-parallax";
 import { ScrollLock } from "@/utils/scroll-lock";
-import { useSearchParams } from "next/navigation";
 
 export const acma = localFont({
   src: "../public/fonts/PPAcma-Book.ttf",
   variable: "--font-acma",
 });
 
-export default function Home() {
-  const { manageMouseMove } = useMouseParallax();
+function SearchParamsContent() {
   const searchParams = useSearchParams();
   const showLoader = searchParams.get("loader");
 
@@ -36,12 +35,22 @@ export default function Home() {
     return () => {
       ScrollLock.enable();
     };
-  }, []);
+  }, [showLoader]);
+
+  return showLoader || "";
+}
+
+export default function Home() {
+  const { manageMouseMove } = useMouseParallax();
+  const params = SearchParamsContent();
 
   return (
     <main onMouseMove={manageMouseMove}>
-      <Navigation delay={showLoader ? 1 : 9.675} />
-      <Loader acmaFont={acma.className} loader={showLoader || ""} />
+      <Navigation delay={1} />
+      <Suspense fallback={<div>Loading...</div>}>
+        {/* This component will handle the useSearchParams logic */}
+        <Loader acmaFont={acma.className} loader={params} />
+      </Suspense>
       <HeroSection />
       <ProjectsSection acmaFont={acma.className} />
       <AboutSection acmaFont={acma.className} />
