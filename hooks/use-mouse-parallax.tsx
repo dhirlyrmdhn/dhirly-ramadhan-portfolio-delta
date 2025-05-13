@@ -10,6 +10,7 @@ export function useMouseParallax() {
   const easing = 0.08;
   const speed = 0.01;
 
+  // @ts-ignore
   const lerp = (start, target, amount) =>
     start * (1 - amount) + target * amount;
 
@@ -39,14 +40,17 @@ export function useMouseParallax() {
     if (Math.abs(yForce.current) < 0.01) yForce.current = 0;
 
     if (xForce.current != 0 || yForce.current != 0) {
+      // @ts-ignore
       requestAnimationFrameId.current = requestAnimationFrame(animate);
     } else {
+      // @ts-ignore
       cancelAnimationFrame(requestAnimationFrameId.current);
       requestAnimationFrameId.current = null;
     }
   }, []);
 
   const manageMouseMove = useCallback(
+    // @ts-ignore
     (e) => {
       const { movementX, movementY } = e;
 
@@ -54,6 +58,7 @@ export function useMouseParallax() {
       yForce.current += movementY * speed;
 
       if (requestAnimationFrameId.current == null) {
+        // @ts-ignore
         requestAnimationFrameId.current = requestAnimationFrame(animate);
       }
     },

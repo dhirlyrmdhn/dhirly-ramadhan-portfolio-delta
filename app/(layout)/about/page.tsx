@@ -108,6 +108,7 @@ const About = () => {
                 return (
                   <textPath
                     key={i}
+                    // @ts-ignore
                     ref={(ref) => (paths.current[i] = ref)}
                     startOffset="-100%"
                     href="#curve"

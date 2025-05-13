@@ -29,31 +29,39 @@ const TextReveal = ({ children, animateOnScroll = true, delay = 0 }: Props) => {
       lines.current = [];
 
       let elements = [];
+      // @ts-ignore
       if (containerRef.current.hasAttribute("data-copy-wrapper")) {
+        // @ts-ignore
         elements = Array.from(containerRef.current.children);
       } else {
         elements = [containerRef.current];
       }
 
       elements.forEach((element) => {
+        // @ts-ignore
         const split = SplitText.create(element, {
           type: "lines",
           mask: "lines",
           linesClass: "line++",
         });
 
+        // @ts-ignore
         splitRef.current.push(split);
 
+        // @ts-ignore
         const computedStyle = window.getComputedStyle(element);
         const textIndent = computedStyle.textIndent;
 
         if (textIndent && textIndent !== "0px") {
           if (split.lines.length > 0) {
+            // @ts-ignore
             split.lines[0].style.paddingLeft = textIndent;
           }
+          // @ts-ignore
           element.style.textIndent = "0";
         }
 
+        // @ts-ignore
         lines.current.push(...split.lines);
       });
 
@@ -83,6 +91,7 @@ const TextReveal = ({ children, animateOnScroll = true, delay = 0 }: Props) => {
       return () => {
         splitRef.current.forEach((split) => {
           if (split) {
+            // @ts-ignore
             split.revert();
           }
         });
@@ -95,6 +104,7 @@ const TextReveal = ({ children, animateOnScroll = true, delay = 0 }: Props) => {
   );
 
   if (React.Children.count(children) === 1) {
+    // @ts-ignore
     return React.cloneElement(children, { ref: containerRef });
   }
 
